@@ -1,1 +1,6 @@
 json-server --watch ./products.json --port 2990
+
+https://www.telerik.com/kendo-react-ui/wrappers/scheduler/data-binding/
+https://www.telerik.com/kendo-react-ui/wrappers/grid/data-operations/paging/
+
+

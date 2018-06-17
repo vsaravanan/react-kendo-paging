@@ -5,15 +5,18 @@ import axios from 'axios';
 
 //import { products as productimp } from './products.json';
 
-//import './extra.css';
+import './extra.css';
 
 //const products = productimp;
 
 
-class App extends React.Component {
+class App extends React.PureComponent {
 
     state = {
-        products : []
+        products : [],
+        loading: true,
+        error : ''
+
     }
 
     constructor(props) {
@@ -23,15 +26,31 @@ class App extends React.Component {
         this.updatePagerState = this.updatePagerState.bind(this);
     }
 
-    componentDidMount() {
-        axios.get(`http://localhost:2990/products`)
+    loadData = () => {
+        this.setState({ loading: true });
+        return axios.get(`http://localhost:2990/products`)
           .then(res => {
-            const products = res.data;
-            this.setState({ products :  res.data });
+            //const products = res.data;
+            this.setState({ 
+                products :  res.data,
+                loading : false
+                });
+            })
+            .catch(error => {
+                console.error(`error: ${error}`);
+                this.setState({
+                    loading: false,
+                    error: `${error}`
+                });
+            });
 
-          })
 
-      }    
+    }
+
+    componentDidMount() {
+        this.loadData();
+
+    }    
 
     pageChange(event) {
         this.setState(this.createState(event.page.skip, event.page.take));
@@ -59,11 +78,23 @@ class App extends React.Component {
     }
 
     render() {
+        const { loading, error, products } = this.state;       
+        if (loading) {
+            return <p>Loading ...</p>;
+        } 
+        if (error) {
+            return (
+              <p>
+                There was an error loading the repos.{' '}
+                <button onClick={this.loadData}>Try again</button>
+              </p>
+            );
+        }                
         return (
             <div>
                 <Grid
                     style={{ height: '280px' }}
-                    data={this.state.items}
+                    data={products}
                     onPageChange={this.pageChange}
                     total={this.state.total}
                     skip={this.state.skip}
