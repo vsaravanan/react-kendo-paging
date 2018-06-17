@@ -1,15 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Grid, GridColumn as Column } from '@progress/kendo-react-grid';
+import axios from 'axios';
 
-import { products as productimp } from './products.json';
+//import { products as productimp } from './products.json';
 
-import './extra.css';
+//import './extra.css';
 
-const products = productimp;
+//const products = productimp;
 
 
-class App extends React.PureComponent {
+class App extends React.Component {
+
+    state = {
+        products : []
+    }
+
     constructor(props) {
         super(props);
         this.state = this.createState(0, 10);
@@ -17,14 +23,24 @@ class App extends React.PureComponent {
         this.updatePagerState = this.updatePagerState.bind(this);
     }
 
+    componentDidMount() {
+        axios.get(`http://localhost:2990/products`)
+          .then(res => {
+            const products = res.data;
+            this.setState({ products :  res.data });
+
+          })
+
+      }    
+
     pageChange(event) {
         this.setState(this.createState(event.page.skip, event.page.take));
     }
 
     createState(skip, take) {
         return {
-            items: products.slice(skip, skip + take),
-            total: products.length,
+            items: this.state.products.slice(skip, skip + take),
+            total: this.state.products.length,
             skip: skip,
             pageSize: take,
             pageable: this.state ? this.state.pageable : {
