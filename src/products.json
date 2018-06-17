@@ -1,3 +1,5 @@
+{ 
+    "products" :
 [{
     "ProductID" : 1,
     "ProductName" : "Chai",
@@ -1231,3 +1233,4 @@
         "Description" : "Sweet and savory sauces, relishes, spreads, and seasonings"
     }
 }]
+}
