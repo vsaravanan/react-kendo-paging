@@ -46,6 +46,7 @@ class App extends React.PureComponent {
                 products :  res.data,
                 loading : false
                 });
+               
         })
             .catch(error => {
                 console.error(`error: ${error}`);
@@ -64,14 +65,15 @@ class App extends React.PureComponent {
     }    
 
     pageChange(event) {
-        this.setState( Object.assign({}, this.state, this.createState(event.page.skip, event.page.take))); 
-    }
+        
+        this.setState({
+            skip: event.page.skip,
+            pageSize: event.page.take
+        });
+        this.setState({
+            items: this.getProducts()
+        });  
 
-    createState(skip, take) {
-        return {
-            skip: skip,
-            pageSize: take,
-        };
     }
 
     filterChange(event) {
@@ -104,6 +106,7 @@ class App extends React.PureComponent {
             data = filterBy(data, this.state.filter);
         if (! this.isEmpty(this.state.sort))
             data = orderBy(data, this.state.sort);
+        data = data.slice(this.state.skip, this.state.skip + this.state.pageSize);
         return data;
     }
         
@@ -124,9 +127,8 @@ class App extends React.PureComponent {
         return (
             <div>
                 <Grid
-                    style={{ height: '280px' }}
-                    
-                    data={this.getProducts().slice(this.state.skip, this.state.skip + this.state.pageSize) }
+                    style={{ height: '400px' }}
+                    data={this.getProducts()}
                     onPageChange={this.pageChange}
                     total={products.length}
                     skip={this.state.skip}
