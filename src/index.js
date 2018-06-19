@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Grid, GridColumn as Column } from '@progress/kendo-react-grid';
+import { filterBy } from '@progress/kendo-data-query';
+
 import axios from 'axios';
 import './extra.css';
 
@@ -21,13 +23,15 @@ class App extends React.PureComponent {
         items : [],
         total:100,
         skip:0,
-        pageSize:10
+        pageSize:10,
+        filter : {}
 
     }
 
     constructor(props) {
         super(props);
         this.pageChange = this.pageChange.bind(this);
+        this.filterChange = this.filterChange.bind(this);
 
     }
 
@@ -67,7 +71,28 @@ class App extends React.PureComponent {
         };
     }
 
+    filterChange(event) {
+        console.log(event.filter);
+        this.setState({
+            items: this.getProducts(event.filter),
+            filter: event.filter
+        });
+    }
 
+    isEmpty(obj) {
+        return ! obj || Object.keys(obj).length === 0;
+    }
+
+    getProducts(filter) {
+
+
+        const data = this.state.products.slice();
+        if (this.isEmpty(filter))
+            return data;
+        else
+            return filterBy(data, filter);
+    }
+        
     render() {
         const { loading, error, products } = this.state;       
         if (loading) {
@@ -80,22 +105,26 @@ class App extends React.PureComponent {
                 <button onClick={this.loadData}>Try again</button>
               </p>
             );
-        }                
+        } 
+        console.log(this.state.filter);
         return (
             <div>
                 <Grid
                     style={{ height: '280px' }}
-                    data={products.slice(this.state.skip, this.state.skip + this.state.pageSize)}
+                    
+                    data={this.getProducts(this.state.filter).slice(this.state.skip, this.state.skip + this.state.pageSize) }
                     onPageChange={this.pageChange}
                     total={products.length}
                     skip={this.state.skip}
                     pageable={this.state.pageable}
                     pageSize={this.state.pageSize}
-                    
+                    filterable = {true}
+                    filter={this.state.filter}
+                    onFilterChange={this.filterChange}                    
                 >
-                    <Column field="ProductID" />
+                    <Column field="ProductID" filter="numeric"  />
                     <Column field="ProductName" title="Product Name" />
-                    <Column field="UnitPrice" title="Unit Price" />
+                    <Column field="UnitPrice" title="Unit Price" filter="numeric"  />
                 </Grid>
             </div >
         );
