@@ -16,6 +16,7 @@
     "@progress/kendo-react-pdf": "1.0.1",
     "@progress/kendo-theme-default": "^2.53.2",
     "axios": "^0.18.0",
+    "bootstrap": "^4.1.1",
     "react": "16.2.0",
     "react-dom": "16.2.0",
     "react-scripts": "1.1.0"

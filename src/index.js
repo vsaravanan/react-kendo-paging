@@ -1,13 +1,53 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Grid, GridColumn as Column } from '@progress/kendo-react-grid';
+import { Grid, GridColumn as Column, GridToolbar } from '@progress/kendo-react-grid';
 import { filterBy, orderBy } from '@progress/kendo-data-query';
+import { Popup } from '@progress/kendo-react-popup'
 
 import axios from 'axios';
+
 import './extra.css';
 
 
 class App extends React.PureComponent {
+
+    columns = [
+        {
+          title: 'Product Id',
+          field: 'ProductID',
+          filter: 'numeric',
+          show: true
+        },
+        {
+          title: 'Product Name',
+          field: 'ProductName',
+          show: true
+        },
+        {
+          title: 'Quantity Per Unit',
+          field: 'QuantityPerUnit',
+          show: true
+        },
+        {
+          title: 'Unit Price',
+          field: 'UnitPrice',
+          filter: 'numeric',
+          show: true
+        },
+        {
+          title: 'Units In Stock',
+          field: 'UnitsInStock',
+          filter: 'numeric',
+          show: true
+        },
+        {
+          title: 'Discontinued',
+          field: 'Discontinued',
+          show: true
+        }
+      ]
+    
+      oneVisibleColumn = false
 
     state = {
         products : [],
@@ -25,7 +65,9 @@ class App extends React.PureComponent {
         skip:0,
         pageSize:10,
         filter : {},
-        sort: []
+        sort: [],
+        columns: this.columns,
+        show:false
 
 
     }
@@ -37,6 +79,28 @@ class App extends React.PureComponent {
         this.sortChange = this.sortChange.bind(this);
 
     }
+
+    toggleColumn = (id) => {
+        let visibleSolumnsCount = 0
+        for(let i = 0; i <this.state.columns.length; i++ ){
+          if(this.state.columns[i].show === true){
+            visibleSolumnsCount++
+          }
+        }
+        if(visibleSolumnsCount === 2 && this.state.columns[id].show === true){
+          this.oneVisibleColumn = true
+        }
+        else{
+          this.oneVisibleColumn = false
+        }
+        this.setState({ columns: this.state.columns.map((column, idx) => idx  === id ? { ...column, show: !column.show } : column) })
+     }
+    
+      onClick = () => {
+               this.setState({ show: !this.state.show });
+      }
+    
+
 
     loadData = () => {
         this.setState({ loading: true });
@@ -125,7 +189,29 @@ class App extends React.PureComponent {
         } 
         console.log(this.state.filter);
         return (
-            <div>
+
+      <div>
+        <Popup
+          anchor={this.anchor}
+          show={this.state.show}
+          popupClass={'popup-content'}
+        >
+          <div>
+            { this.state.columns.map((column, idx) =>
+              (
+                <div key={idx}>
+                 <span className="col-md-3 col-sm-4">
+                  <input id={idx} className="k-checkbox" 
+                    disabled={column.show && this.oneVisibleColumn} type="checkbox" readOnly={true} checked={column.show} 
+                    onClick={() => { this.toggleColumn(idx) }} />
+                  <label htmlFor={idx} className="k-checkbox-label" >{column.title}</label>
+                 </span>
+                </div>
+              )
+            )}
+          </div>
+        </Popup>
+
                 <Grid
                     style={{ height: '400px' }}
                     data={this.getProducts()}
@@ -140,12 +226,32 @@ class App extends React.PureComponent {
                     sortable={true}
                     sort={this.state.sort}
                     onSortChange={this.sortChange}
-          
-                    
+                    resizable={true}
+                    reorderable={true}
+
                 >
-                    <Column field="ProductID" filter="numeric"  />
-                    <Column field="ProductName" title="Product Name" />
-                    <Column field="UnitPrice" title="Unit Price" filter="numeric"  />
+
+                    <GridToolbar>
+                        <button
+                            title="Click"
+                            className="k-button k-primary"
+                            onClick={this.onClick}
+                            ref={(button) => {
+                            this.anchor = button;
+                        }}
+                        >{this.state.show ? 'Hide column menu' : 'Show column menu'}
+                        </button>
+                    </GridToolbar>
+
+                    {this.state.columns.map((column, idx) =>
+                        column.show &&
+                            (
+                            column.filter ?
+                            <Column key={idx} field={column.field} title={column.title} filter={column.filter} /> :
+                            <Column key={idx} field={column.field} title={column.title}   /> 
+                            )
+
+                    )}                    
                 </Grid>
             </div >
         );
