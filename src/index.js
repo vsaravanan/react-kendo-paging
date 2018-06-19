@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Grid, GridColumn as Column } from '@progress/kendo-react-grid';
-import { filterBy } from '@progress/kendo-data-query';
+import { filterBy, orderBy } from '@progress/kendo-data-query';
 
 import axios from 'axios';
 import './extra.css';
@@ -24,7 +24,9 @@ class App extends React.PureComponent {
         total:100,
         skip:0,
         pageSize:10,
-        filter : {}
+        filter : {},
+        sort: []
+
 
     }
 
@@ -32,6 +34,7 @@ class App extends React.PureComponent {
         super(props);
         this.pageChange = this.pageChange.bind(this);
         this.filterChange = this.filterChange.bind(this);
+        this.sortChange = this.sortChange.bind(this);
 
     }
 
@@ -72,25 +75,36 @@ class App extends React.PureComponent {
     }
 
     filterChange(event) {
-        console.log(event.filter);
         this.setState({
-            items: this.getProducts(event.filter),
             filter: event.filter
         });
+        this.setState({
+            items: this.getProducts()
+        });   
     }
+
+    sortChange(event) {
+        this.setState({
+          sort: event.sort
+        });
+        this.setState({
+            items: this.getProducts()
+        });         
+
+    }
+
 
     isEmpty(obj) {
         return ! obj || Object.keys(obj).length === 0;
     }
 
-    getProducts(filter) {
-
-
-        const data = this.state.products.slice();
-        if (this.isEmpty(filter))
-            return data;
-        else
-            return filterBy(data, filter);
+    getProducts() {
+        let data = this.state.products.slice();
+        if (! this.isEmpty(this.state.filter))
+            data = filterBy(data, this.state.filter);
+        if (! this.isEmpty(this.state.sort))
+            data = orderBy(data, this.state.sort);
+        return data;
     }
         
     render() {
@@ -112,7 +126,7 @@ class App extends React.PureComponent {
                 <Grid
                     style={{ height: '280px' }}
                     
-                    data={this.getProducts(this.state.filter).slice(this.state.skip, this.state.skip + this.state.pageSize) }
+                    data={this.getProducts().slice(this.state.skip, this.state.skip + this.state.pageSize) }
                     onPageChange={this.pageChange}
                     total={products.length}
                     skip={this.state.skip}
@@ -120,7 +134,12 @@ class App extends React.PureComponent {
                     pageSize={this.state.pageSize}
                     filterable = {true}
                     filter={this.state.filter}
-                    onFilterChange={this.filterChange}                    
+                    onFilterChange={this.filterChange}    
+                    sortable={true}
+                    sort={this.state.sort}
+                    onSortChange={this.sortChange}
+          
+                    
                 >
                     <Column field="ProductID" filter="numeric"  />
                     <Column field="ProductName" title="Product Name" />
