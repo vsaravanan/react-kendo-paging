@@ -63,7 +63,7 @@ class App extends React.PureComponent {
                 loading : false
                 });
                
-        })
+            })
             .catch(error => {
                 console.error(`error: ${error}`);
                 this.setState({
@@ -127,7 +127,14 @@ class App extends React.PureComponent {
 
     columnsSelected = (data) => {
         this.setState(data);
-    }     
+    } 
+    
+    printData = () => {
+        return ( this.state.columns.map((column, idx) =>
+                    column.show &&
+                    (<Column key={idx} field={column.field} title={column.title} filter={column.filter} /> )
+        ));
+    }
 
     render() {
         const { loading, error, products } = this.state;       
@@ -180,16 +187,9 @@ class App extends React.PureComponent {
                         >{this.state.show ? 'Hide Columns' : 'Columns'}
                         </button>
                     </GridToolbar>
-
-                    {this.state.columns.map((column, idx) =>
-                        column.show &&
-                            (
-                            column.filter ?
-                            <Column key={idx} field={column.field} title={column.title} filter={column.filter} /> :
-                            <Column key={idx} field={column.field} title={column.title}   /> 
-                            )
-
-                    )}                    
+                    
+                   {this.printData()}
+                  
                 </Grid>
             </div >
         );
