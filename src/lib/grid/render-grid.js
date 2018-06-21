@@ -4,8 +4,6 @@ import { filterBy, orderBy } from '@progress/kendo-data-query';
 
 import Popup from 'lib/grid/popup-columns';
 
-
-
 export default class RenderGrid extends React.PureComponent {
     //gridPDFExport;
 
@@ -51,28 +49,19 @@ export default class RenderGrid extends React.PureComponent {
             skip: event.page.skip,
             pageSize: event.page.take
         });
-        this.setState({
-            items: this.getDynData()
-        });  
-
     }
 
     filterChange(event) {
         this.setState({
             filter: event.filter
         });
-        this.setState({
-            items: this.getDynData()
-        });   
+  
     }
 
     sortChange(event) {
         this.setState({
           sort: event.sort
         });
-        this.setState({
-            items: this.getDynData()
-        });         
 
     }
 
@@ -101,7 +90,8 @@ export default class RenderGrid extends React.PureComponent {
             data = filterBy(data, this.state.filter);
         if (! this.isEmpty(this.state.sort))
             data = orderBy(data, this.state.sort);
-        data = data.slice(this.state.skip, this.state.skip + this.state.pageSize);
+        let skip = data.length < this.state.skip ? 0 : this.state.skip;
+        data = data.slice(skip, skip + this.state.pageSize);
         return data;
     }
 
