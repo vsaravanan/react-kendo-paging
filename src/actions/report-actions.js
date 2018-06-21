@@ -19,3 +19,24 @@ export const fetchMinMax = () => (dispatch) => {
       });
 
 }
+
+
+// export const fetchData = (url) => (dispatch) => {
+//     //let url = 'http://localhost:2990/products';
+//     axios.get(`${url}`)
+//     .then(res => {
+//         dispatch({
+//             type: FETCH_MIN_MAX,
+//             payload: res.data,
+//         });
+//       })
+//       .catch(error => {
+//         console.error(`error: ${error}`);
+//         dispatch({
+//             type: SHOW_ERROR,
+//             payload: error.response
+//         });
+//       });
+
+// }
+

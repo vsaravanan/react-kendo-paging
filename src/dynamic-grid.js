@@ -12,7 +12,7 @@ import { fetchMinMax } from 'actions/report-actions';
 import './extra.css';
 
 
-class App extends React.PureComponent {
+class DynamicGrid extends React.PureComponent {
 
 
 
@@ -52,8 +52,7 @@ class App extends React.PureComponent {
     }
 
     componentDidMount() {
-        //this.loadData();
-        this.props.fetchMinMax();
+        this.props.fetchMinMax('http://localhost:2990/products');
     }    
 
     pageChange(event) {
@@ -170,4 +169,4 @@ const mapStateToProps = (state) => ({
     dyndata: state.report.min_max
 });
 
-export default connect(mapStateToProps, { fetchMinMax } )(App);
+export default connect(mapStateToProps, { fetchMinMax } )(DynamicGrid);
