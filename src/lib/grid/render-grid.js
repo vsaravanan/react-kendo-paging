@@ -1,11 +1,15 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
+
 import { Grid, GridColumn as Column, GridToolbar, GridPDFExport } from '@progress/kendo-react-grid';
 import { filterBy, orderBy } from '@progress/kendo-data-query';
-
+//import { PDFExport, savePDF } from '@progress/kendo-react-pdf';
 import Popup from 'lib/grid/popup-columns';
 
 export default class RenderGrid extends React.PureComponent {
-    //gridPDFExport;
+    gridPDFExport;
+    //pdfExportComponent;
+    // grid;
 
     state = {
         dyndata : this.props.dyndata,
@@ -65,18 +69,18 @@ export default class RenderGrid extends React.PureComponent {
 
     }
 
-    // exportPDF = () => {
-    //     this.raisePDFExportRequestedFlag();
-    //     this.gridPDFExport.save(this.getDynData(), this.lowerPDFExportRequestedFlag);
-    // }
+    exportPDF = () => {
+        this.raisePDFExportRequestedFlag();
+        this.gridPDFExport.save(this.getDynData(), this.lowerPDFExportRequestedFlag);
+    }
 
-    // raisePDFExportRequestedFlag = () => {
-    //     this.setState({ pdfExportRequested: true });
-    // }
+    raisePDFExportRequestedFlag = () => {
+        this.setState({ pdfExportRequested: true });
+    }
 
-    // lowerPDFExportRequestedFlag = () => {
-    //     this.setState({ pdfExportRequested: undefined });
-    // }
+    lowerPDFExportRequestedFlag = () => {
+        this.setState({ pdfExportRequested: undefined });
+    }
 
     isEmpty(obj) {
         return ! obj || Object.keys(obj).length === 0;
@@ -111,28 +115,20 @@ export default class RenderGrid extends React.PureComponent {
         ));
     }
 
+
+    // exportPDFWithMethod = () => {
+    //     savePDF(ReactDOM.findDOMNode(this.grid), { paperSize: 'A4' });
+    // }
+    // exportPDFWithComponent = () => {
+    //     this.pdfExportComponent.save();
+    // }
+
     render() {
         const { dyndata } = this.props;
 
-        // const grid = (
-
-        // );
-        // {grid}
-
-        return (
-
-            <div>
-
-                <Popup 
-                    columnsSelected={this.columnsSelected} 
-                    columns={this.state.columns}  
-                    show={this.state.show} 
-                    anchor={this.anchor} 
-                    />
-
-
-
+        const grid = (
             <Grid
+            ref={(grid) => this.grid = grid}
             style={{ height: '600px' }}
             data={this.getDynData()}
             onPageChange={this.pageChange}
@@ -148,11 +144,10 @@ export default class RenderGrid extends React.PureComponent {
             onSortChange={this.sortChange}
             resizable={true}
             reorderable={true}
-
-        >
+            >
 
             <GridToolbar  >
-                       
+                    
                 <button
                     title="Click"
                     className="k-button k-primary"
@@ -162,11 +157,51 @@ export default class RenderGrid extends React.PureComponent {
                 }}
                 >{this.state.show ? 'Hide Columns' : 'Columns'}
                 </button>
+
+                <button
+                    title="Export PDF"
+                    className="k-button k-primary"
+                    onClick={this.exportPDF}
+                    disabled={this.state.pdfExportRequested}
+                >
+                    Export PDF
+                </button>
             </GridToolbar>
             
-           {this.printData()}
-          
-        </Grid>
+            {this.printData()}
+        
+            </Grid>
+
+        );
+
+        return (
+
+            <div>
+                {/* <div class="example-config">
+                    <button className="k-button" onClick={this.exportPDFWithComponent}>Export PDF</button>
+                    &nbsp;
+                    <button className="k-button" onClick={this.exportPDFWithMethod}>Export PDF 2</button>
+                </div> 
+            
+                <PDFExport ref={(component) => this.pdfExportComponent = component} paperSize="A4">
+            
+                */}
+
+                <Popup 
+                    columnsSelected={this.columnsSelected} 
+                    columns={this.state.columns}  
+                    show={this.state.show} 
+                    anchor={this.anchor} 
+                    />
+
+
+                {grid}
+                <GridPDFExport
+                    ref={(element) => { this.gridPDFExport = element; }}
+                    margin="1cm" >
+                    {grid}
+                </GridPDFExport>
+
 
 
             </div >
