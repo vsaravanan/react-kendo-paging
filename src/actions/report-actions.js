@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { FETCH_MIN_MAX, SHOW_ERROR } from 'actions';
+import { FETCH_MIN_MAX, FETCH_PRODUCTS, SHOW_ERROR } from 'actions';
 
 export const fetchMinMax = () => (dispatch) => {
 
-    axios.get(`http://localhost:2990/products`)
+    axios.get(`http://localhost:2990/min_max_data`)
     .then(res => {
         dispatch({
             type: FETCH_MIN_MAX,
@@ -21,22 +21,21 @@ export const fetchMinMax = () => (dispatch) => {
 }
 
 
-// export const fetchData = (url) => (dispatch) => {
-//     //let url = 'http://localhost:2990/products';
-//     axios.get(`${url}`)
-//     .then(res => {
-//         dispatch({
-//             type: FETCH_MIN_MAX,
-//             payload: res.data,
-//         });
-//       })
-//       .catch(error => {
-//         console.error(`error: ${error}`);
-//         dispatch({
-//             type: SHOW_ERROR,
-//             payload: error.response
-//         });
-//       });
+export const fetchProducts = () => (dispatch) => {
 
-// }
+    axios.get(`http://localhost:2990/products`)
+    .then(res => {
+        dispatch({
+            type: FETCH_PRODUCTS,
+            payload: res.data,
+        });
+      })
+      .catch(error => {
+        console.error(`error: ${error}`);
+        dispatch({
+            type: SHOW_ERROR,
+            payload: error.response
+        });
+      });
 
+}
