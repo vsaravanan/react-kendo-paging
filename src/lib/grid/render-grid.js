@@ -4,33 +4,26 @@ import { Grid, GridColumn as Column, GridToolbar, GridPDFExport } from '@progres
 import { filterBy, orderBy } from '@progress/kendo-data-query';
 
 import Popup from 'lib/grid/popup-columns';
+import PageTemplate from 'templates/pdf/pageheader-untitled';
 
-const PageHeader = (
-    <div className="header">
-        Min Max Report  
-    </div>
-)
 
-class PageTemplate extends React.Component {
-    render() {
-        return (
-            <div className="page-template">
 
-                {PageHeader}
 
-                <div className="footer">
-                    <div style={{ position: "absolute", bottom: "10px", right: "10px" }}>
-                        Page {this.props.pageNum} of {this.props.totalPages} </div>                
-                </div>
-            </div>            
-
-        );
-    }
-}
 
 export default class RenderGrid extends React.PureComponent {
     gridPDFExport;
+
+    pdfGenericOptions = {
+        fileName :  'Untitled.pdf',
+        title :     'Untitled Title',
+        paperSize: 'A4',
+        scale : 0.5,
+        margin : '1.5cm',
+        landscape : true,
+        repeatHeaders : true
+    } 
     
+    pdf = { ...this.pdfGenericOptions,  ...this.props.pdf }
 
     state = {
         dyndata : this.props.dyndata,
@@ -194,6 +187,7 @@ export default class RenderGrid extends React.PureComponent {
 
         );
 
+        const thisPageTemplate = (this.props.PageTemplate ? this.props.PageTemplate : PageTemplate )
 
         return (
 
@@ -209,16 +203,16 @@ export default class RenderGrid extends React.PureComponent {
 
 
                 {grid}
+
                 <GridPDFExport
-                    pageTemplate={PageTemplate}
-                    paperSize={ this.props.pdf.paperSize ? this.props.pdf.paperSize : 'A4' }
-                    scale={0.5}
-                    margin='1.5cm'
-                    landscape = {true}
-                    fileName = {this.props.pdf.fileName}
-                    title = {this.props.pdf.title}
-                    subject = {this.props.pdf.title}
-                    repeatHeaders = {true}
+                    pageTemplate={thisPageTemplate}
+                    paperSize={this.pdf.paperSize}
+                    scale={this.pdf.scale}
+                    margin={this.pdf.margin}
+                    landscape = {this.pdf.landscape}
+                    fileName = {this.pdf.fileName}
+                    title = {this.pdf.title}
+                    repeatHeaders = {this.pdf.repeatHeaders}
                     ref={(element) => { this.gridPDFExport = element; }} >
                     {grid}
 

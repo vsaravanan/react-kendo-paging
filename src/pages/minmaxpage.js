@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { fetchMinMax } from 'actions/report-actions';
 import { columns } from 'templates/column-templates/min-max-data-columns';
+import PageTemplate from 'templates/pdf/pageheader-min-max-data';
 
 import RenderGrid from 'lib/grid/render-grid';
 
@@ -18,11 +19,10 @@ class MinMaxPage extends React.PureComponent {
             fileName :  'MinMaxReport.pdf',
             title :     'Min Max Report',
             paperSize : 'Legal'
-
         }
 
         return (
-                <RenderGrid dyndata={this.props.dyndata}  columns={columns}  pdf={pdfOptions} />
+                <RenderGrid dyndata={this.props.dyndata}  columns={columns}  pdf={pdfOptions} PageTemplate={PageTemplate} />
         );
     }
 }
