@@ -1,15 +1,36 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 import { Grid, GridColumn as Column, GridToolbar, GridPDFExport } from '@progress/kendo-react-grid';
 import { filterBy, orderBy } from '@progress/kendo-data-query';
-//import { PDFExport, savePDF } from '@progress/kendo-react-pdf';
+
 import Popup from 'lib/grid/popup-columns';
+
+const PageHeader = (
+    <div className="header">
+        Min Max Report  
+    </div>
+)
+
+class PageTemplate extends React.Component {
+    render() {
+        return (
+            <div className="page-template">
+
+                {PageHeader}
+
+                <div className="footer">
+                    <div style={{ position: "absolute", bottom: "10px", right: "10px" }}>
+                        Page {this.props.pageNum} of {this.props.totalPages} </div>                
+                </div>
+            </div>            
+
+        );
+    }
+}
 
 export default class RenderGrid extends React.PureComponent {
     gridPDFExport;
-    //pdfExportComponent;
-    // grid;
+    
 
     state = {
         dyndata : this.props.dyndata,
@@ -68,10 +89,11 @@ export default class RenderGrid extends React.PureComponent {
         });
 
     }
-
+    
     exportPDF = () => {
         this.raisePDFExportRequestedFlag();
-        this.gridPDFExport.save(this.getDynData(), this.lowerPDFExportRequestedFlag);
+        let pdfdata = this.getDynData({ isPdf: true });
+        this.gridPDFExport.save( pdfdata, this.lowerPDFExportRequestedFlag);
     }
 
     raisePDFExportRequestedFlag = () => {
@@ -79,14 +101,14 @@ export default class RenderGrid extends React.PureComponent {
     }
 
     lowerPDFExportRequestedFlag = () => {
-        this.setState({ pdfExportRequested: undefined });
+        this.setState({ pdfExportRequested: false });
     }
 
     isEmpty(obj) {
         return ! obj || Object.keys(obj).length === 0;
     }
 
-    getDynData() {
+    getDynData(isPdf = false) {
         if (! this.props.dyndata )
             return [];
         let data = this.props.dyndata.slice();
@@ -94,8 +116,13 @@ export default class RenderGrid extends React.PureComponent {
             data = filterBy(data, this.state.filter);
         if (! this.isEmpty(this.state.sort))
             data = orderBy(data, this.state.sort);
-        let skip = data.length < this.state.skip ? 0 : this.state.skip;
-        data = data.slice(skip, skip + this.state.pageSize);
+        if (! isPdf) {
+            let skip = data.length < this.state.skip ? 0 : this.state.skip;
+            data = data.slice(skip, skip + this.state.pageSize);
+        }
+        else {
+            data = data.slice(0,1);
+        }
         return data;
     }
 
@@ -115,13 +142,6 @@ export default class RenderGrid extends React.PureComponent {
         ));
     }
 
-
-    // exportPDFWithMethod = () => {
-    //     savePDF(ReactDOM.findDOMNode(this.grid), { paperSize: 'A4' });
-    // }
-    // exportPDFWithComponent = () => {
-    //     this.pdfExportComponent.save();
-    // }
 
     render() {
         const { dyndata } = this.props;
@@ -174,18 +194,11 @@ export default class RenderGrid extends React.PureComponent {
 
         );
 
+
         return (
 
             <div>
-                {/* <div class="example-config">
-                    <button className="k-button" onClick={this.exportPDFWithComponent}>Export PDF</button>
-                    &nbsp;
-                    <button className="k-button" onClick={this.exportPDFWithMethod}>Export PDF 2</button>
-                </div> 
-            
-                <PDFExport ref={(component) => this.pdfExportComponent = component} paperSize="A4">
-            
-                */}
+
 
                 <Popup 
                     columnsSelected={this.columnsSelected} 
@@ -197,11 +210,19 @@ export default class RenderGrid extends React.PureComponent {
 
                 {grid}
                 <GridPDFExport
-                    ref={(element) => { this.gridPDFExport = element; }}
-                    margin="1cm" >
+                    pageTemplate={PageTemplate}
+                    paperSize={ this.props.pdf.paperSize ? this.props.pdf.paperSize : 'A4' }
+                    scale={0.5}
+                    margin='1.5cm'
+                    landscape = {true}
+                    fileName = {this.props.pdf.fileName}
+                    title = {this.props.pdf.title}
+                    subject = {this.props.pdf.title}
+                    repeatHeaders = {true}
+                    ref={(element) => { this.gridPDFExport = element; }} >
                     {grid}
-                </GridPDFExport>
 
+                </GridPDFExport>                    
 
 
             </div >

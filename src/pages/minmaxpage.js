@@ -13,8 +13,16 @@ class MinMaxPage extends React.PureComponent {
     }    
 
     render() {
+
+        let pdfOptions = {
+            fileName :  'MinMaxReport.pdf',
+            title :     'Min Max Report',
+            paperSize : 'Legal'
+
+        }
+
         return (
-                <RenderGrid dyndata={this.props.dyndata}  columns={columns} />
+                <RenderGrid dyndata={this.props.dyndata}  columns={columns}  pdf={pdfOptions} />
         );
     }
 }

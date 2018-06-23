@@ -257,3 +257,30 @@
     border-radius: 0.4rem;
   }
   
+
+  .page-template {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.page-template .header {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    right: 30px;
+
+    border-bottom: 1px solid #888;
+
+    text-align: left;
+    font-size: 24px;
+}
+
+.page-template .footer {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    right: 30px;
+}
