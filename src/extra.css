@@ -5,7 +5,7 @@
 /* @import url("styles/kendo.silver.min.css"); */
 /* @import url("styles/kendo.moonlight.min.css"); change grid color */
 /* @import url("styles/kendo.highcontrast.min.css"); change grid color */
-@import url("styles/kendo.highcontrast.min.css");
+@import url("styles/kendo.custom.css");
 
 .k-grid-content {
   background-color:  #232d36 !important;
