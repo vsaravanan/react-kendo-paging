@@ -1,18 +1,18 @@
 import React from 'react';
 
 import { Grid, GridColumn as Column, GridToolbar, GridPDFExport } from '@progress/kendo-react-grid';
+import { ExcelExport } from '@progress/kendo-react-excel-export';
 import { filterBy, orderBy } from '@progress/kendo-data-query';
 
 import Popup from 'lib/grid/popup-columns';
 import PageTemplate from 'templates/pdf/pageheader-untitled';
-
-
+import { generateCSV } from 'lib/csv/generate-csv';
 
 
 
 export default class RenderGrid extends React.PureComponent {
     gridPDFExport;
-
+    _export;
     pdfGenericOptions = {
         fileName :  'Untitled.pdf',
         title :     'Untitled Title',
@@ -85,7 +85,7 @@ export default class RenderGrid extends React.PureComponent {
     
     exportPDF = () => {
         this.raisePDFExportRequestedFlag();
-        let pdfdata = this.getDynData({ isPdf: true });
+        let pdfdata = this.getDynData({ isAll: true });
         this.gridPDFExport.save( pdfdata, this.lowerPDFExportRequestedFlag);
     }
 
@@ -97,11 +97,23 @@ export default class RenderGrid extends React.PureComponent {
         this.setState({ pdfExportRequested: false });
     }
 
+    export = () => {
+        let exceldata = this.getDynData({ isAll: true });   
+        let excelparams = {};
+        excelparams.data =  exceldata;
+        let f = this.props.pdf.fileName.split('.');
+        f.pop();
+        f = f.join() + '.csv';
+        excelparams.filename = f;
+        generateCSV(excelparams);
+        //this._export.save(exceldata);
+    }
+
     isEmpty(obj) {
         return ! obj || Object.keys(obj).length === 0;
     }
 
-    getDynData(isPdf = false) {
+    getDynData(isAll = false) {
         if (! this.props.dyndata )
             return [];
         let data = this.props.dyndata.slice();
@@ -109,12 +121,12 @@ export default class RenderGrid extends React.PureComponent {
             data = filterBy(data, this.state.filter);
         if (! this.isEmpty(this.state.sort))
             data = orderBy(data, this.state.sort);
-        if (! isPdf) {
+        if (! isAll) {
             let skip = data.length < this.state.skip ? 0 : this.state.skip;
             data = data.slice(skip, skip + this.state.pageSize);
         }
         else {
-            data = data.slice(0,1);
+            // data = data.slice(0,1);
         }
         return data;
     }
@@ -138,6 +150,7 @@ export default class RenderGrid extends React.PureComponent {
 
     render() {
         const { dyndata } = this.props;
+
 
         const grid = (
             <Grid
@@ -172,6 +185,14 @@ export default class RenderGrid extends React.PureComponent {
                 </button>
 
                 <button
+                        title="Export CSV"
+                        className="k-button k-primary"
+                        onClick={this.export}
+                    >
+                        Export CSV
+                </button>
+
+                <button
                     title="Export PDF"
                     className="k-button k-primary"
                     onClick={this.exportPDF}
@@ -182,17 +203,20 @@ export default class RenderGrid extends React.PureComponent {
             </GridToolbar>
             
             {this.printData()}
-        
+
+
             </Grid>
 
         );
+
+        // <Column key='1' title = 'CCY' field = 'CCY' /> 
+        // <Column key='2'  title = 'Quantity' field = 'Quantity' />
 
         const thisPageTemplate = (this.props.PageTemplate ? this.props.PageTemplate : PageTemplate )
 
         return (
 
             <div>
-
 
                 <Popup 
                     columnsSelected={this.columnsSelected} 
@@ -204,6 +228,9 @@ export default class RenderGrid extends React.PureComponent {
 
                 {grid}
 
+                <ExcelExport
+                     ref={(exporter) => { this._export = exporter; }}
+                >
                 <GridPDFExport
                     pageTemplate={thisPageTemplate}
                     paperSize={this.pdf.paperSize}
@@ -217,6 +244,7 @@ export default class RenderGrid extends React.PureComponent {
                     {grid}
 
                 </GridPDFExport>                    
+                </ExcelExport>
 
 
             </div >
