@@ -21,7 +21,8 @@ import {
 import SourceLink from 'components/SourceLink';
 
 import sidebarBgImage from 'assets/img/sidebar/sidebar-4.jpg';
-import logo200Image from 'assets/img/logo/logo_200.png';
+//import logo200Image from 'assets/img/logo/logo_200.png';
+import scb_logo from 'assets/img/logo/scb_logo.png';
 
 const sidebarBackground = {
 
@@ -58,17 +59,20 @@ class Sidebar extends React.Component {
         <div className={bem.e('background')} style={sidebarBackground} />
         <div className={bem.e('content')}>
           <Navbar>
-            <SourceLink className="navbar-brand d-flex">
+            <SourceLink className="navbar-brand" >
+
+              <div className="text-white">
+                velocity
+              </div>
+
               <img
-                src={logo200Image}
-                width="40"
-                height="30"
+                src={scb_logo}
+                width="53"
+                height="80"
                 className="pr-2"
                 alt=""
               />
-              <span className="text-white">
-                Saravanan 
-              </span>
+
             </SourceLink>
           </Navbar>
           <Nav vertical>

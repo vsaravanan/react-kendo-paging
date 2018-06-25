@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-import { Header, Sidebar, Content, Footer } from "components/Layout";
+import { Header, Sidebar, Content, Footer } from "components/layout";
 
 import componentQueries from "react-component-queries";
 
@@ -9,10 +9,10 @@ import Products from "pages/products.js";
 
 
 
-import "./styles/reduction.css";
+import "styles/reduction.css";
 
 
-class App extends React.Component {
+class Main extends React.Component {
 
 
   static isSidebarOpen() {
@@ -35,7 +35,7 @@ class App extends React.Component {
   handleContentClick = event => {
     // close sidebar if sidebar is open and screen size is less than `md`
     if (
-      App.isSidebarOpen() &&
+      Main.isSidebarOpen() &&
       (this.props.breakpoint === "xs" ||
         this.props.breakpoint === "sm" ||
         this.props.breakpoint === "md")
@@ -71,17 +71,14 @@ class App extends React.Component {
   render() {
     return (
       <BrowserRouter basename="/">
-        <main className="cr-app bg-light">
+        <main className="cr-app bg-dark">
           <Sidebar />
           <Content fluid onClick={this.handleContentClick}>
             <Header />
             <Switch>
               <Route exact path="/minmax" component={MinMaxPage} />
               <Route path="/products" component={Products} />
-              <Route
-                path="/stock/:stockId/chart/:duration"
-                render={props => <GotoCompanyChart {...props} />}
-              />
+
 
               <Redirect to="/" />
             </Switch>
@@ -118,4 +115,4 @@ const query = ({ width }) => {
   return { breakpoint: "xs" };
 };
 
-export default componentQueries(query)(App);
+export default componentQueries(query)(Main);

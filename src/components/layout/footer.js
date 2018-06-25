@@ -9,8 +9,10 @@ const Footer = () => {
     <Navbar>
       <Nav navbar>
         <NavItem>
-          Testing message {" "}
-          <SourceLink>Github</SourceLink>
+          <span className="text-white">
+            Test site {" "} 
+          </span>
+          <SourceLink>SCB</SourceLink>
         </NavItem>
       </Nav>
     </Navbar>

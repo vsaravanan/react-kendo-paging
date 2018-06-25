@@ -15,27 +15,7 @@ import {
 const bem = bn.create('header');
 
 class Header extends React.Component {
-//   state = {
-//     isOpenNotificationPopover: false,
-//     // isNotificationConfirmed: false,
-//     isOpenUserCardPopover: false,
-//   };
 
-//   toggleNotificationPopover = () => {
-//     this.setState({
-//       isOpenNotificationPopover: !this.state.isOpenNotificationPopover,
-//     });
-
-//     // if (!this.state.isNotificationConfirmed) {
-//     //   this.setState({ isNotificationConfirmed: true });
-//     // }
-//   };
-
-  toggleUserCardPopover = () => {
-    this.setState({
-      isOpenUserCardPopover: !this.state.isOpenUserCardPopover,
-    });
-  };
 
   handleSidebarControlButton = event => {
     event.preventDefault();
@@ -47,10 +27,10 @@ class Header extends React.Component {
   render() {
 
     return (
-      <Navbar light expand className={bem.b('bg-white')}>
-        <Nav navbar className="mr-2">
-          <Button outline onClick={this.handleSidebarControlButton}>
-            <MdClearAll size={25} />
+      <Navbar light expand className={bem.b('bg-dark')} >
+        <Nav navbar className="mr-2"  >
+          <Button outline onClick={this.handleSidebarControlButton} color="white">
+            <MdClearAll size={25}  />
           </Button>
         </Nav>
 

@@ -8,8 +8,9 @@ import thunk  from 'redux-thunk';
 import logger from 'redux-logger';
 import allReducers from 'reducers';
 
-import MinMaxPage from 'pages/minmaxpage';
+//import MinMaxPage from 'pages/minmaxpage';
 //import Products from 'pages/products';
+import Main from 'pages/mainpage';
 
 import 'extra.css';
 
@@ -21,7 +22,7 @@ const store = createStore(
  
 ReactDOM.render(
     <Provider store={store}>
-        <MinMaxPage />
+        <Main />
     </Provider>,
     document.getElementById('root')
 );
