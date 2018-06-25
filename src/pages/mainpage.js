@@ -5,6 +5,7 @@ import { Header, Sidebar, Content, Footer } from "components/layout";
 import componentQueries from "react-component-queries";
 
 import MinMaxPage from "pages/minmaxpage.js";
+import Article59 from "pages/article59.js";
 import Products from "pages/products.js";
 
 
@@ -77,6 +78,7 @@ class Main extends React.Component {
             <Header />
             <Switch>
               <Route exact path="/minmax" component={MinMaxPage} />
+              <Route path="/article59" component={Article59} />
               <Route path="/products" component={Products} />
 
 

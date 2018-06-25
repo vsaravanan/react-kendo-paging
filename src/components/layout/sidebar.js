@@ -32,6 +32,7 @@ const sidebarBackground = {
 
 const navItems = [
   { to: '/minmax', name: 'minmax', exact: false, Icon: MdWeb },
+  { to: '/article59', name: 'article59', exact: false, Icon: MdArrowDropDownCircle },
   { to: '/products', name: 'products', exact: false, Icon: MdArrowDropDownCircle },
 ];
 

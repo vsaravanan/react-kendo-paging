@@ -1,4 +1,4 @@
-import { FETCH_MIN_MAX, FETCH_PRODUCTS } from 'actions';
+import { FETCH_MIN_MAX, FETCH_ARTICLE59, FETCH_PRODUCTS } from 'actions';
 
 
 export default (state = [], action) => {
@@ -8,6 +8,11 @@ export default (state = [], action) => {
                 ...state,
                 min_max : action.payload
             };
+        case FETCH_ARTICLE59:
+            return {
+                ...state,
+                article59 : action.payload
+            };            
         case FETCH_PRODUCTS:
             return {
                 ...state,
