@@ -1,14 +1,14 @@
 /* @import url("https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"); */
-/* @import "../node_modules/bootstrap/dist/css/bootstrap.css"; */
+@import "../node_modules/bootstrap/dist/css/bootstrap.css"; 
 @import "../node_modules/@progress/kendo-theme-default/dist/all.css";
 /* @import url("styles/kendo.bootstrap-v4.min.css"); */
 /* @import url("styles/kendo.blueopal.min.css"); */
 /* @import url("styles/kendo.silver.min.css"); */
 /* @import url("styles/kendo.moonlight.min.css"); change grid color */
 /* @import url("styles/kendo.highcontrast.min.css"); change grid color */
-@import url("styles/reduction.css");
+/* @import url("styles/reduction.css"); */
 /* @import url("styles/kendo.custom.css"); */
-@import url("styles/kendo.blueopal.min.css");
+@import url("styles/scb_velocity.css");
 
 
 /* .k-grid-content {
